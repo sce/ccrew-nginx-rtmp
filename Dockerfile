@@ -21,7 +21,10 @@ RUN ln -s /dev/stdout /var/log/nginx/access.log && ln -s /dev/stderr /var/log/ng
 # remove extra config with http virtualhost stuff we don't want:
 RUN rm /etc/nginx/conf.d/default.conf
 
+# note: if you change the port you have to rebuild the image (due to EXPOSE
+# below) or run an existing image with "docker run -p your_new_port"
 ENV PORT=1935 \
+    BUFLEN=1s \
     STREAM_URL=rtmp://a.rtmp.youtube.com/live2 \
     STREAM_KEY=abc-123
 
@@ -30,7 +33,5 @@ EXPOSE ${PORT}
 WORKDIR /root
 COPY init.sh init.sh
 COPY nginx.conf _rtmp.conf
-
-#RUN envsubst '$STREAM_KEY $STREAM_URL $PORT' < /root/_rtmp.conf > /etc/nginx/modules/rtmp.conf
 
 ENTRYPOINT ["/root/init.sh"]
