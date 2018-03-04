@@ -2,15 +2,13 @@
 FROM alpine:3.7
 
 RUN apk update && apk add bash vim
-RUN apk add nginx nginx-mod-rtmp
+
+RUN apk add nginx nginx-mod-rtmp && \
+    # need these two to get envsubst:
+    apk add gettext libintl
 
 # cleanup after apk
 RUN rm -rf /var/cache/*
-
-# remove extra config with http virtualhost stuff we don't want:
-RUN rm /etc/nginx/conf.d/default.conf
-
-COPY nginx.conf /etc/nginx/modules/rtmp.conf
 
 # for some reason it's having trouble creating a log directory for itself (the
 # apk package should have done this?)
@@ -20,6 +18,17 @@ RUN mkdir /var/run/nginx && chown nginx /var/run/nginx
 # logs" command:
 RUN ln -s /dev/stdout /var/log/nginx/access.log && ln -s /dev/stderr /var/log/nginx/error.log
 
-EXPOSE 1935
+# remove extra config with http virtualhost stuff we don't want:
+RUN rm /etc/nginx/conf.d/default.conf
+
+ENV PORT=1935 \
+    STREAM_URL=rtmp://a.rtmp.youtube.com/live2 \
+    STREAM_KEY=abc-123
+
+EXPOSE ${PORT}
+
+COPY nginx.conf /root/_rtmp.conf
+
+RUN envsubst '$STREAM_KEY $STREAM_URL $PORT' < /root/_rtmp.conf > /etc/nginx/modules/rtmp.conf
 
 ENTRYPOINT ["nginx"]
