@@ -18,8 +18,11 @@ RUN mkdir /var/run/nginx && chown nginx /var/run/nginx
 # logs" command:
 RUN ln -s /dev/stdout /var/log/nginx/access.log && ln -s /dev/stderr /var/log/nginx/error.log
 
-# remove extra config with http virtualhost stuff we don't want:
+# remove extra config with http virtualhost stuff we don't want (this is just
+# to prevent confusion)
 RUN rm /etc/nginx/conf.d/default.conf
+
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # note: if you change the port you have to rebuild the image (due to EXPOSE
 # below) or run an existing image with "docker run -p your_new_port"
@@ -32,6 +35,6 @@ EXPOSE ${PORT}
 
 WORKDIR /root
 COPY init.sh init.sh
-COPY nginx.conf _rtmp.conf
+COPY _rtmp.conf _rtmp.conf
 
 ENTRYPOINT ["/root/init.sh"]
