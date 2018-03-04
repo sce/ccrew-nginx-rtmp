@@ -32,6 +32,9 @@ ENV PORT=1935 \
     STREAM_KEY=abc-123
 
 EXPOSE ${PORT}
+# for stats:
+EXPOSE 8080
+COPY stat.xsl /etc/nginx/stat.xsl
 
 WORKDIR /root
 COPY init.sh init.sh
