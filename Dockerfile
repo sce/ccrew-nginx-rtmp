@@ -27,8 +27,10 @@ ENV PORT=1935 \
 
 EXPOSE ${PORT}
 
-COPY nginx.conf /root/_rtmp.conf
+WORKDIR /root
+COPY init.sh init.sh
+COPY nginx.conf _rtmp.conf
 
-RUN envsubst '$STREAM_KEY $STREAM_URL $PORT' < /root/_rtmp.conf > /etc/nginx/modules/rtmp.conf
+#RUN envsubst '$STREAM_KEY $STREAM_URL $PORT' < /root/_rtmp.conf > /etc/nginx/modules/rtmp.conf
 
-ENTRYPOINT ["nginx"]
+ENTRYPOINT ["/root/init.sh"]
