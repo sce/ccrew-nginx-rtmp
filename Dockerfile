@@ -24,6 +24,10 @@ RUN rm /etc/nginx/conf.d/default.conf
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
+# for stats:
+EXPOSE 8080
+COPY stat.xsl /etc/nginx/stat.xsl
+
 # note: if you change the port you have to rebuild the image (due to EXPOSE
 # below) or run an existing image with "docker run -p your_new_port"
 ENV PORT=1935 \
@@ -32,9 +36,6 @@ ENV PORT=1935 \
     STREAM_KEY=abc-123
 
 EXPOSE ${PORT}
-# for stats:
-EXPOSE 8080
-COPY stat.xsl /etc/nginx/stat.xsl
 
 WORKDIR /root
 COPY init.sh init.sh
