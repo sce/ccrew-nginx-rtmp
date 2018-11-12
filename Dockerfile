@@ -31,9 +31,7 @@ COPY stat.xsl /etc/nginx/stat.xsl
 # note: if you change the port you have to rebuild the image (due to EXPOSE
 # below) or run an existing image with "docker run -p your_new_port"
 ENV PORT=1935 \
-    BUFLEN=1s \
-    STREAM_URL=rtmp://a.rtmp.youtube.com/live2 \
-    STREAM_KEY=abc-123
+    BUFLEN=1s
 
 EXPOSE ${PORT}
 

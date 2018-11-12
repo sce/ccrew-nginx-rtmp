@@ -1,0 +1,5 @@
+STREAM_YT_URL=rtmp://a.rtmp.youtube.com/live2
+STREAM_YT_KEY=
+
+STREAM_FB_URL=rtmp://live-api-s.facebook.com:80/rtmp/
+STREAM_FB_KEY=
